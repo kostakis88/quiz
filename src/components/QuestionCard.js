@@ -10,12 +10,15 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
+    maxWidth: 850,
     textAlign: "center"
+  },
+  button: {
+    margin: "5px 0"
   }
 });
 
-const QuestionCard = () => {
+const QuestionCard = (props) => {
   const classes = useStyles();
 
   return (
@@ -23,10 +26,10 @@ const QuestionCard = () => {
       <CardActionArea>
         <CardContent>
           <Typografy variant="h5" component="h5">
-            Question: 1/10
+            Question: {props.number}/10
           </Typografy>
           <Typografy variant="h5" component="h5">
-            Question Text Here
+            {props.question}
           </Typografy>
         </CardContent>
       </CardActionArea>
@@ -35,9 +38,12 @@ const QuestionCard = () => {
           orientation="vertical"
           color="primary"
           variant="contained"
+          fullWidth={true}
           aria-label="vertical outlined primary button group"
         >
-          <Button>First Quiz Answer Here</Button>
+          {props.answers.map(answer => {
+            return <Button key={answer} className={classes.button}>{answer}</Button> 
+          })}
         </ButtonGroup>
         </CardActions>
     </Card>
