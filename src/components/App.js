@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import helperFunction from './helperFunction';
 import QuizAPI from './QuizAPI';
 import QuestionCard from './QuestionCard';
 import Typografy from '@material-ui/core/Typography';
@@ -11,6 +12,8 @@ const App = () => {
   const [question, setQuestion] = useState();
   const [counter, setCounter] = useState(0);
   const [answers, setAnswers] = useState([]);
+  const [correctAnswer, setCorrectAnswer] = useState();
+  const [disabledButton, setDisabledButton] = useState(false);
   const [buttonVisibility, setButtonVisibility] = useState(false);
 
   useEffect(() => {
@@ -21,19 +24,30 @@ const App = () => {
     QuizAPI.retrieveQuizQuestions()
     .then(res => res.json())
     .then( res => {
-      setCounter(item + 1);
-      setQuestion(res.results[item].question)
-      setAnswers([...res.results[item].incorrect_answers, res.results[item].correct_answer])
+      console.log(res.results);
+      setCounter(item);
+      setQuestion(res.results[item].question);
+      let answersArray = [...res.results[item].incorrect_answers, res.results[item].correct_answer];
+      let shuffledArray = helperFunction.shuffle(answersArray);
+      setAnswers(shuffledArray);
+      setCorrectAnswer(res.results[item].correct_answer);
     })
   } 
 
   const handleAnswerClick = (event) => {
     setButtonVisibility(true);
+    if (event.target.parentNode.value) {
+      if (event.target.parentNode.value !== correctAnswer) {
+        event.target.parentNode.style.backgroundColor = 'red';
+      } 
+    }
+    setDisabledButton(true);
   }
 
   const handleContinueClick = () => {
     setButtonVisibility(false);
-    handleQuizQuestions(counter);
+    handleQuizQuestions(counter + 1);
+    setDisabledButton(false);
   }
 
  return (
@@ -53,6 +67,8 @@ const App = () => {
         number={counter + 1}
         question={question}
         answers={answers}
+        correct={correctAnswer}
+        disabled={disabledButton}
         onClick={handleAnswerClick} 
       />
      </Grid>

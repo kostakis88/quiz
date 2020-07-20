@@ -15,6 +15,9 @@ const useStyles = makeStyles({
   },
   button: {
     margin: "5px 0"
+  },
+  correct: {
+    backgroundColor: "green"
   }
 });
 
@@ -39,13 +42,18 @@ const QuestionCard = (props) => {
           color="primary"
           variant="contained"
           fullWidth={true}
-          aria-label="vertical outlined primary button group"
+          correct={props.correct}
+          aria-label="vertical primary button group"
         >
           {props.answers.map(answer => {
+            let displayCorrect = (props.disabled && props.correct === answer) ? true : false; 
+            let customeClassNames =  classes.button + ' ' + (displayCorrect ? classes.correct : '');
             return <Button 
-                      key={answer} 
-                      className={classes.button}
+                      key={answer}
+                      value={answer}
+                      className={customeClassNames}
                       onClick={props.onClick}
+                      style={{ pointerEvents: props.disabled ? "none" : "auto" }}
                     >{answer}</Button> 
           })}
         </ButtonGroup>
