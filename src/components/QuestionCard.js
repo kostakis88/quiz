@@ -42,7 +42,11 @@ const QuestionCard = (props) => {
           aria-label="vertical outlined primary button group"
         >
           {props.answers.map(answer => {
-            return <Button key={answer} className={classes.button}>{answer}</Button> 
+            return <Button 
+                      key={answer} 
+                      className={classes.button}
+                      onClick={props.onClick}
+                    >{answer}</Button> 
           })}
         </ButtonGroup>
         </CardActions>
