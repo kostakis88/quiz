@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import helperFunction from './helperFunction';
 import QuizAPI from './QuizAPI';
 import QuestionCard from './QuestionCard';
+import End from './End';
 import Typografy from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -15,6 +16,7 @@ const App = () => {
   const [correctAnswer, setCorrectAnswer] = useState();
   const [disabledButton, setDisabledButton] = useState(false);
   const [buttonVisibility, setButtonVisibility] = useState(false);
+  const [endMessage, setEndMessage] = useState(false);
 
   useEffect(() => {
     handleQuizQuestions(0);
@@ -24,7 +26,6 @@ const App = () => {
     QuizAPI.retrieveQuizQuestions()
     .then(res => res.json())
     .then( res => {
-      console.log(res.results);
       setCounter(item);
       setQuestion(res.results[item].question);
       let answersArray = [...res.results[item].incorrect_answers, res.results[item].correct_answer];
@@ -46,8 +47,12 @@ const App = () => {
 
   const handleContinueClick = () => {
     setButtonVisibility(false);
-    handleQuizQuestions(counter + 1);
     setDisabledButton(false);
+    if (counter < 9) {
+      handleQuizQuestions(counter + 1);
+    } else {
+      setEndMessage(true);
+    }
   }
 
  return (
@@ -75,6 +80,7 @@ const App = () => {
      <Grid container item xs={12} direction="row" justify="center" alignItems="center" style={{ display: buttonVisibility ? "flex" : "none" }}>
        <Button color="secondary" variant="contained" onClick={handleContinueClick}>Continue</Button>
      </Grid>
+     {endMessage && <End/>}
    </Container>
  ); 
 }
