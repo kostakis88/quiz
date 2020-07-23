@@ -17,6 +17,7 @@ const App = () => {
   const [disabledButton, setDisabledButton] = useState(false);
   const [buttonVisibility, setButtonVisibility] = useState(false);
   const [endMessage, setEndMessage] = useState(false);
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     handleQuizQuestions(0);
@@ -40,7 +41,9 @@ const App = () => {
     if (event.target.parentNode.value) {
       if (event.target.parentNode.value !== correctAnswer) {
         event.target.parentNode.style.backgroundColor = 'red';
-      } 
+      } else {
+        setScore(score + 10);
+      }
     }
     setDisabledButton(true);
   }
@@ -64,7 +67,7 @@ const App = () => {
      </Grid>
      <Grid container item xs={12} direction="row" justify="center" alignItems="center">
       <Typografy variant="h5" component="h2">
-        Score: 0
+        Score: {score} / 100
       </Typografy>
      </Grid>
      <Grid container item xs={12} direction="row" justify="center" alignItems="center">
@@ -80,7 +83,7 @@ const App = () => {
      <Grid container item xs={12} direction="row" justify="center" alignItems="center" style={{ display: buttonVisibility ? "flex" : "none" }}>
        <Button color="secondary" variant="contained" onClick={handleContinueClick}>Continue</Button>
      </Grid>
-     {endMessage && <End/>}
+     {endMessage && <End score={score}/>}
    </Container>
  ); 
 }
